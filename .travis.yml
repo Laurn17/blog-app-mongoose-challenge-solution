@@ -8,3 +8,4 @@ deploy:
   app: infinite-sands-91773
   on:
     repo: Laurn17/blog-app-mongoose-challenge-solution
+    

@@ -1,3 +1,10 @@
 language: node_js
 node_js: node
 services: mongodb
+deploy:
+  provider: heroku
+  api_key:
+    secure: VmiIvdj+LLf3cXJvpw2CUgyJxk/564Ig12uDdZeGP7sgENeNFRn14tGoe+ColarVZc22AaS4Y7rB7AaM1lpNUZDkfOWnuAl8Ly6kJFm3f94TwwkivI9KShX0cequ60adEQYYk8qbdByai4Vnhat39XZPB+wVB7Tq+kUlY9/OX0+qELKjix/BjKfi/a475FU7KyLO6xUOXGii0o9Px2/Xx4loBgFoxfvc3h20ijmB6hG6rC3ppHwoJqTyLIbboJr+QmIeRzDl4XLBp3QZG+5Ta5Tyu+vu7GRT0K/vY0gFQhH45Wtqx0HIChY8IMqCCH2+7jg2YiFTAxsjly7qS3gbdGm48vfTiFhzQrscYwm+xksu1wk7ke3xbS1hyZAa8rw80/rH+gdPGJntPuBTY2dXrMJWJSZf1enOuz++RSD9yxbZbgfzMRajdDf+XbC2ULCt4aHBgo00yujIUmc7wDaxgEDBoWeIzDphdn73O0cXD3z8e2Dvq+LbKTZrVnTJ84pTsZvGOLoz8kL382LSLodarJKoU8Pt8pXmhDPtcyFJZAZim6bNf1RIteaoiyonz7hyvfGjJH1mYR4O5RMZTnnA3IzvoYrFUq40vCgI25yp/OsgQKezlr3COWdEXd/6KwCoQ0CVH8QA1wRfoLyngC/msx2AeZp6JMRm4hYb9eBQ9N0=
+  app: infinite-sands-91773
+  on:
+    repo: Laurn17/blog-app-mongoose-challenge-solution

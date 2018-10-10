@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const { DATABASE_URL, PORT } = require('./config');
+const { TEST_DATABASE_URL, DATABASE_URL, PORT } = require('./config');
 const { BlogPost } = require('./models');
 
 const app = express();

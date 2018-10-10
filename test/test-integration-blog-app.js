@@ -2,7 +2,7 @@
 
 const chai = require("chai");
 const chaihttp = require("chai-http");
-const faker = require("faker")l
+const faker = require("faker");
 const mongoose = require("mongoose");
 
 const expect = chai.expect;
@@ -21,23 +21,27 @@ function seedBlogPosts() {
 		seedData.push(generateBlogData());
 	}
 	return BlogPost.insertMany(seedData);
-};
+}
 
 function generateBlogData() {
 	return {
+		title: faker.lorem.sentence(),
 		author: {
     		firstName: faker.name.firstName(),
-    		lastName: faker.name.lastName()
+    		lastName: faker.name.lastName(),
   		},
-  		title: faker.lorem.sentence(),
   		content: faker.lorem.text()
 	};
-};
+}
 
 function tearDownDb() {
+	return new Promise(function(resolve, reject) {
 	console.warn("Deleted database");
-	return mongoose.connection.dropDatabase();
-};
+	mongoose.connection.dropDatabase()
+		.then(result => resolve(result))
+		.catch(err => reject(err));
+});
+}
 
 describe("BlogPosts API resource", function() {
 	before(function() {
@@ -49,7 +53,7 @@ describe("BlogPosts API resource", function() {
 	});
 
 	afterEach(function() {
-		return tearDowbDb();
+		return tearDownDb();
 	});
 
 	after(function() {
@@ -67,11 +71,11 @@ describe("BlogPosts API resource", function() {
 				.then(function(_res) {
 					res = _res;
 					expect(res).to.have.status(200);
-					expect(res.body.posts).to have.lengthOf.at.least(1);
+					expect(res.body).to.have.lengthOf.at.least(1);
 					return BlogPost.count();
-				}}
+				})
 				.then(function(count) {
-					expect(res.body.posts).to.have.lengthOf(count);
+					expect(res.body).to.have.lengthOf(count);
 				});
 		});
 
@@ -79,20 +83,20 @@ describe("BlogPosts API resource", function() {
 			let resPosts;
 			return chai
 				.request(app)
-				.get("./posts")
+				.get("/posts")
 				.then(function(res) {
-					epxpect(res).to.have.status(200);
+					expect(res).to.have.status(200);
 					expect(res).to.be.json;
-					expect(res.body.posts).to.ba.a('array');
-					expect(res.body.posts).to.have.lengthOf.at.least(1);
+					expect(res.body).to.be.a('array');
+					expect(res.body).to.have.lengthOf.at.least(1);
 
-					res.body.posts.forEach(function(post) {
+					res.body.forEach(function(post) {
 						expect(post).to.be.a("object");
 						expect(post).to.include.keys(
 							"id", "title", "content", "author", "created");
 					});
 
-					resPosts = res.body.posts[0];
+					resPosts = res.body[0];
 					return BlogPost.findById(resPosts.id);
 				})
 				.then(function(post) {
@@ -104,10 +108,11 @@ describe("BlogPosts API resource", function() {
 		});
 });
 
-describe("POST endpoitn", function() {
+describe("POST endpoint", function() {
 	it("should add a new blog", function() {
 
-		const newblog = generateBlogData();
+		let newBlog;
+		var newblog = generateBlogData();
 
 		return chai
 		.request(app)
@@ -127,8 +132,8 @@ describe("POST endpoitn", function() {
 		.then(function(post) {
 			expect(post.title).to.equal(newBlog.title);
 			expect(post.content).to.equal(newBlog.content);
-			expect(post.author.firstName).to.equal(newBlog.author.firstName);
-			expect(post.author.lastName).to.equal(newBlog.author.lastName);
+			expect(post.author).to.equal(newBlog.authorName);
+			// expect(post.author.lastName).to.equal(newBlog.author.lastName);
 		});
 	});
 });
@@ -158,8 +163,7 @@ describe("PUT endpoint", function() {
 			.then(function(post) {
 				expect(post.title).to.equal(updateData.title);
 				expect(post.content).to.equal(updateData.content);
-				expect(post.author.firstName).to.equal(updateData.author.firstName);
-          		expect(post.author.lastName).to.equal(updateData.author.lastName);
+				// expect(post.author).to.equal(updateData.authorName);
 			});
 	});
 });
@@ -171,6 +175,7 @@ describe("DELETE endpoints", function() {
 			.findOne()
 			.then(function(_blog) {
 				blog = _blog;
+				
 				return chai
 				.request(app)
 				.delete(`/posts/${blog.id}`);

@@ -1,4 +1,4 @@
-"use strict"
+'use strict';
 
 const chai = require("chai");
 const chaihttp = require("chai-http");
@@ -28,7 +28,7 @@ function generateBlogData() {
 		title: faker.lorem.sentence(),
 		author: {
     		firstName: faker.name.firstName(),
-    		lastName: faker.name.lastName(),
+    		lastName: faker.name.lastName()
   		},
   		content: faker.lorem.text()
 	};
@@ -111,13 +111,13 @@ describe("BlogPosts API resource", function() {
 describe("POST endpoint", function() {
 	it("should add a new blog", function() {
 
-		let newBlog;
-		var newblog = generateBlogData();
+		// let newBlog;
+		var newBlog = generateBlogData();
 
 		return chai
 		.request(app)
 		.post("/posts")
-		.send(newblog)
+		.send(newBlog)
 		.then(function(res) {
 			expect(res).to.have.status(201);
 			expect(res).to.be.json;
@@ -126,14 +126,14 @@ describe("POST endpoint", function() {
 			expect(res.body.id).to.not.be.null;
 			expect(res.body.title).to.equal(newBlog.title);
 			expect(res.body.content).to.equal(newBlog.content);
-			expect(res.body.author).to.equal(newBlog.authorName)
+			expect(res.body.author).to.equal(`${newBlog.author.firstName} ${newBlog.author.lastName}`);
 			return BlogPost.findById(res.body.id);
 		})
 		.then(function(post) {
 			expect(post.title).to.equal(newBlog.title);
 			expect(post.content).to.equal(newBlog.content);
-			expect(post.author).to.equal(newBlog.authorName);
-			// expect(post.author.lastName).to.equal(newBlog.author.lastName);
+			expect(post.author.firstName).to.equal(newBlog.author.firstName);
+			expect(post.author.lastName).to.equal(newBlog.author.lastName);
 		});
 	});
 });

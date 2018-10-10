@@ -111,13 +111,12 @@ describe("BlogPosts API resource", function() {
 describe("POST endpoint", function() {
 	it("should add a new blog", function() {
 
-		let newBlog;
-		var newblog = generateBlogData();
+		var newBlog = generateBlogData();
 
 		return chai
 		.request(app)
 		.post("/posts")
-		.send(newblog)
+		.send(newBlog)
 		.then(function(res) {
 			expect(res).to.have.status(201);
 			expect(res).to.be.json;
